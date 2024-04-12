@@ -2,6 +2,7 @@
 # include <string>
 # include <cctype>
 #include <limits>
+#include <iomanip>
 using namespace std;
 string stackname;
 #ifndef STACK_H
@@ -43,9 +44,11 @@ class Stack
 public:
  Node* top;
  string course;
+ Node* nodeexist;
  Stack()
 {
  top= NULL;
+ course="ELECRICAL AND ELECRONIC ENGINEERING 2023";
 }
  bool isEmpty()
 {
@@ -67,6 +70,7 @@ public:
 {
  if(temp -> key == n -> key){
  exist = true;
+ nodeexist=temp;
  break;
 
 }
@@ -110,16 +114,16 @@ public:
  void push(Node * n) {
  if (top == NULL) {
  top = n;
- //cout << "Node PUSHED successfully" << endl;
+ cout << "Student details added  successfully" << endl;
  } else if (checkIfNodeExist(n)) {
- cout << "Node already exist with this Key value." <<
- "Enter different Key value" << endl;
+ cout << "Reg no. already exist with this Key value." <<
+ "Enter different Reg no." << endl;//cout the reg no with the details;
  } else {
  /*Node * temp = top;
  top = n;
  n -> next = temp;*/
  sortpush(n);
- //cout << "Node PUSHED successfully" << endl;
+ cout << "Student details added  successfully" << endl;
  }
  }
  Node * pop() {
@@ -131,7 +135,42 @@ public:
  temp = top;
  top = top -> next;
  return temp;
+ } 
  }
+ Node * pop(int k) {
+ Node * temp = NULL;
+ Node * tempreturn= NULL;
+ Node* tempnode=new Node;
+ tempnode->key=k;
+ if (isEmpty()) {
+ cout << "stack underflow" << endl;
+ delete tempnode;
+ return temp;
+ } else if(checkIfNodeExist(tempnode)){
+  temp= top;
+  if(nodeexist==top){
+//tempreturn=top;
+top=NULL;
+return nodeexist;
+  }else{
+while(temp!=NULL){
+  if(temp->next==nodeexist){
+    temp->next=(temp->next)->next;
+    break;
+  }
+  temp=temp->next;
+}
+}
+}
+else{
+  cout<<"Node doesn't exist"<<endl;
+}
+ 
+// else{
+  //cout<<"Node doesn't exist"<<endl;
+//}
+ delete tempnode;
+ return nodeexist;
  }
  Node * peek() {
  //Node *temp = NULL;
@@ -162,6 +201,23 @@ public:
 
  cout << endl;
  }
+ void display2(){
+  /*cout<<fixed<<setw(60)<<left<<setfill('_')<<endl;
+  cout<<endl;
+  cout<<endl<<"|"*/cout<<fixed<<setw(50)<<left<<course<<endl;
+ // cout<<fixed<<setw(60)<<left<<setfill('_')<<endl;
+  Node* temp=top;
+  cout<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
+  cout<<fixed<<setw(8)<<left<<"Gender"<<fixed<<setw(15)<<left<<"Contact"<<endl;
+  //cout<<fixed<<setw(60)<<left<<setfill('_')<<endl;
+  while(temp!=NULL){
+     cout<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
+  cout<<fixed<<setw(8)<<left<<temp->gender<<fixed<<setw(15)<<left<<temp->phoneno<<endl;
+    //cout<<fixed<<setw(60)<<left<<setfill('_')<<endl;
+    temp=temp->next;
+  }
+ }
+
 };
 #endif
 void createlist();
@@ -194,6 +250,20 @@ switch(option){
        new_node->gender=gender;
        new_node->phoneno=phone;
        s1.push(new_node);
+       cout<<"this is the updated list\n"<<endl;
+       s1.display2();
+       break;
+    case 3:
+        //delete new_node;
+        cout<<"Enter the Reg no. of the student to remve from list"<<endl;
+        cin>>key;
+        new_node=s1.pop(key);
+        cout<<"student with details: \n"<<new_node->key<<"  "<<new_node->name<<"\n removed successfully\n";
+        delete new_node;
+        cout<<endl;
+        break;   
+     case 4:s1.display2();
+        break;
     default:
           cout<<"please enter a valid option"<<endl;     
 
