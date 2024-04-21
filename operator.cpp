@@ -43,11 +43,13 @@ class Stack
 {
 public:
  Node* top;
+ Node* bottom;
  string course;
  Node* nodeexist;
  Stack()
 {
  top= NULL;
+ bottom= NULL;
  course="ELECRICAL AND ELECRONIC ENGINEERING 2023";
 }
  bool isEmpty()
@@ -65,20 +67,29 @@ public:
  bool checkIfNodeExist(Node* n)
 {
  Node* temp = top;
+ int T,B,mid;
+ T=top->key;
+ B=bottom->key;
  bool exist = false;
- while(temp != NULL)
+ while(T<= B)
 {
- if(temp -> key == n -> key){
- exist = true;
- nodeexist=temp;
- break;
-
-}
- temp = temp -> next;
+  mid=T + (B-T)/2;
+  if(T==n->key){
+    exist= true;
+    break;
+  }
+  if(mid<n->key){
+    T=mid + 1;
+  }
+  if(mid> n->key){
+      B=mid-1;
+  }
 
 }
  return exist;
  }
+ 
+ 
  void sortpush(Node * n){
   if((n-> key)< (top-> key)){
     n->next=top;
@@ -97,6 +108,7 @@ public:
         temp=temp->next;
     }if (temp->next==NULL){
       temp->next=n;
+      bottom=n;
       n-> next = NULL;
     }else{
     temp = top;
@@ -113,10 +125,10 @@ public:
  }
  void push(Node * n) {
  if (top == NULL) {
- top = n;
+ top = n;bottom=n;
  cout << "Student details added  successfully" << endl;
  } else if (checkIfNodeExist(n)) {
- cout << "Reg no. already exist with this Key value." <<
+ cout << "Reg no. already exist " <<
  "Enter different Reg no." << endl;//cout the reg no with the details;
  } else {
  /*Node * temp = top;
@@ -146,11 +158,17 @@ public:
  cout << "stack underflow" << endl;
  delete tempnode;
  return temp;
- } else if(checkIfNodeExist(tempnode)){
+ }/*else if(!checkIfNodeExist(tempnode)){
+  delete tempnode;
+  cout<<"No match found"<<endl;
+  return temp;
+ }*/
+  else if(checkIfNodeExist(tempnode)){
   temp= top;
   if(nodeexist==top){
 //tempreturn=top;
-top=NULL;
+
+top=top->next;
 return nodeexist;
   }else{
 while(temp!=NULL){
@@ -163,7 +181,8 @@ while(temp!=NULL){
 }
 }
 else{
-  cout<<"Node doesn't exist"<<endl;
+ // delete tempnode;
+  cout<<"No match found"<<endl;
 }
  
 // else{
@@ -227,24 +246,54 @@ int main(){
  do{
     cout<<"select the operation you want to perform"<<endl;
 cout<<"1.create a list"<<'\n'<<"2.Add members"<<'\n'<<"3.Remove a member "<<'\n'<<"4.Print list \n enter 0 to exit"<<endl;
-cin>>option;
+while(!(cin>>option)){
+  cin.clear();
+  cin.ignore(numeric_limits<streamsize>::max(),'\n');
+  cout<<"please input a no. corresponding to your selection \n";
+ // cin>>option;
+}
 Node* new_node=new Node;
 switch(option){
     case 0: break;
     case 1:createlist();
            break;
     case 2:
-        cout<<"Enter the registration no. i.e 2257"<<endl;
-        cin>>key;
-        cin.clear();
+    //Reg No handler
+       cout<<"Enter the registration no. i.e 2257"<<endl;
+        while(!(cin>>key)){
+       cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout<<"!!!please put the reg no without the course code \n";     
+        
+        }
+       //Name handler
         cout<<"Name i.e Odayo Jemuel \n";
+          cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');                                                                                                                                  
         getline(cin,name);
-        cout<<"gender i.e M/F \n" ;cin>>gender;
+        //Gender handler
+       /*because the cin.ignore() function clears the input buffer up to the newline character ('\n'), 
+       any additional characters entered after "dfg" (e.g., pressing Enter) will also be ignored.*/
+        do{
+        cout<<"gender i.e M/F \n" ;
+        string input;
+        cin>>input;
+        if(input.size()==1&&(input[0]=='m'||input[0]=='M'||input[0]=='f'||input[0]=='F')){
+          gender=input[0];
+          break;
+        }else cout<<"Insert a single letter either m/f"<<endl;
+         
+        }while(true);
         if(islower(gender)){
             gender=toupper(gender);
         }
-       cout<<"Enter phone no.ie 07xxxxxxx \n";cin>>phone;
+       cout<<"Enter phone no.ie 07xxxxxxx \n if it is foreign ignore  the '+' \n  ";
+       while(!(cin>>phone)||((to_string(phone).size())<9))//an unpredictable issue occurs here
+       {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout<<"length too short or invalid phone no."<<endl;
+       }
        new_node->key=key;
        new_node->name=name;
        new_node->gender=gender;
