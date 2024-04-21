@@ -18,6 +18,8 @@ public:
  char gender;
  int phoneno;
  Node* next;
+ int pos,pure1,pure2,comp,ds,applied1,applied2,phyc1,phyc2,ect1,wkshop1,wkshop2;
+    double total,aggpoints;
  Node()
 {
  key=0;
@@ -64,16 +66,7 @@ public:
   }
 
 }
- 
-  if(mid<n->key){
-    T=mid + 1;
-  }
-  if(mid> n->key){
-      B=mid-1;
-  }
-
-}
-bool checkIfNodeExist(Node* n)
+ bool checkIfNodeExist(Node* n)
 {
  Node* temp = top;
  int T,B,mid;
@@ -87,6 +80,14 @@ bool checkIfNodeExist(Node* n)
     exist= true;
     break;
   }
+  if(mid<n->key){
+    T=mid + 1;
+  }
+  if(mid> n->key){
+      B=mid-1;
+  }
+
+}
  return exist;
  }
  
@@ -237,22 +238,72 @@ else{
     temp=temp->next;
   }
  }
+ void assesment(){
+Node* temp=top;
+while(temp!=NULL){
+  display2();
+  cout<<"You are currently inputing assesment marks for:"<<temp->key<<" "<<temp->name<<endl;
+  cout<<endl;
+  cout<<"INSERT THE RESULTS IN THE GIVEN ORDER"<<endl;
+  cout<<" pure1 pure2 comp DS$algorithm applied1 applied2 "<<endl;
+  cin>>temp->pure1>>temp->pure2>>temp->comp>>temp->ds>>temp->applied1>>temp->applied2;
+  cout<<"PHY1 PHY2 wkshop1 wkshop2 ECT"<<endl;
+  cin>>temp->phyc1>>temp->phyc2>>temp->wkshop1>>temp->wkshop2>>temp->ect1;
+  temp->total=((temp->pure1)+(temp->pure2)+(temp->comp)+(temp->ds)+temp->applied1+temp->applied2+temp->phyc1+temp->phyc2+temp->wkshop1+temp->wkshop2+temp->ect1);
+    temp->aggpoints=(temp->total/11);
+
+    cout<<temp->name<<"'s total marks is: "<<temp->total<<"and Agg.:"<<temp->aggpoints<<endl;
+  temp=temp->next;
+  cout<<endl;
+}
+cout<<"the updated assesment list is \n";
+assesDisplay();
+ }
+ void assesDisplay(){
+  cout<<fixed<<setw(50)<<left<<course<<endl;
+  Node* temp=top;
+  cout<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
+  cout<<fixed<<setw(8)<<left<<"Gender"<<fixed<<setw(15)<<left<<"Contact";
+  cout<<fixed<<setw(8)<<left<<"Pure1"<<fixed<<setw(8)<<left<<"Pure2"<<fixed<<setw(8)<<left<<"COMP"<<fixed<<setw(8)<<left<<"DS&ALG";
+  cout<<fixed<<setw(9)<<left<<"Applied1"<<fixed<<setw(9)<<left<<"Applied2"<<fixed<<setw(8)<<left<<"Phyc1"<<fixed<<setw(8)<<left<<"Phyc2";
+  cout<<fixed<<setw(9)<<left<<"Workshop1"<<fixed<<setw(9)<<left<<"Workshop2"<<fixed<<left<<setw(8)<<"ECT";
+  cout<<fixed<<setw(8)<<left<<"Total"<<fixed<<setw(8)<<left<<"Agg"<<endl;
+  while(temp!=NULL){
+     cout<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
+  cout<<fixed<<setw(8)<<left<<temp->gender<<fixed<<setw(15)<<left<<temp->phoneno;
+  //edit this
+  cout<<fixed<<setw(8)<<left<<temp->pure1<<fixed<<setw(8)<<left<<temp->pure2<<fixed<<setw(8)<<left<<temp->comp<<fixed<<setw(8)<<left<<temp->ds;
+  cout<<fixed<<setw(9)<<left<<temp->applied1<<fixed<<setw(9)<<left<<temp->applied2<<fixed<<setw(8)<<left<<temp->phyc1<<fixed<<setw(8)<<left<<temp->phyc2;
+  cout<<fixed<<setw(9)<<left<<temp->wkshop1<<fixed<<setw(9)<<left<<temp->wkshop2<<fixed<<left<<setw(8)<<temp->ect1;
+  cout<<fixed<<setw(8)<<setprecision(2)<<left<<temp->total<<fixed<<setw(8)<<left<<setprecision(2)<<temp->aggpoints<<endl;
+    temp=temp->next;
+  }
+ }
 
 };
 #endif
 void createlist();
+/*class Assesstack:class Stack{
+    public:
+    int pure1,pure2,comp,ds,applied1,applied2,phyc1,phyc2,ect1,wkshop1,wkshop2;
+    double total,aggpoints;
+    AssesStack(){
+        Stack();
+    }
+};*/
 int main(){
     Stack s1;
  int option,key,phone;string name;char gender;
  do{
-    cout<<"select the operation you want to perform"<<endl;
-cout<<"1.create a list"<<'\n'<<"2.Add members"<<'\n'<<"3.Remove a member "<<'\n'<<"4.Print list \n enter 0 to exit"<<endl;
+    cout<<"\nselect the operation you want to perform"<<endl;
+cout<<"1.create a list"<<'\n'<<"2.Add members"<<'\n'<<"3.Remove a member "<<'\n'<<"4.Print list\n5.Assesment Update and display \n enter 0 to exit"<<endl;
 while(!(cin>>option)){
   cin.clear();
   cin.ignore(numeric_limits<streamsize>::max(),'\n');
   cout<<"please input a no. corresponding to your selection \n";
  // cin>>option;
 }
+
 Node* new_node=new Node;
 switch(option){
     case 0: break;
@@ -314,6 +365,12 @@ switch(option){
         break;   
      case 4:s1.display2();
         break;
+      case 5:
+      if(s1.isEmpty()){
+        cout<<"please add students to the list 1st"<<endl;
+      } else{
+           s1.assesment();}
+        break;  
     default:
           cout<<"please enter a valid option"<<endl;     
 
