@@ -1,3 +1,6 @@
+//REEDITTED it inanother file and returned here due to unforeseen errors
+//case 5 has been implemented to handle any kind of error
+//All the cases have been implemented
 # include <iostream>
 # include <string>
 # include <cctype>
@@ -25,20 +28,26 @@ public:
  key=0;
  phoneno=0;
  next = NULL;
+ pos=0;pure1=0;pure2=0;comp=0;ds=0;applied1=0;applied2=0;phyc1=0;phyc2=0;ect1=0;wkshop1=0;wkshop2=0;
+ total=0;aggpoints=0;
 }
  Node
 (int k, string d)
 {
  key=k;
 name=d;
-gender= '*';
+gender='*';
 phoneno=0700000000;
+pos=0;pure1=0;pure2=0;comp=0;ds=0;applied1=0;applied2=0;phyc1=0;phyc2=0;ect1=0;wkshop1=0;wkshop2=0;
+ total=0;aggpoints=0;
 }
 Node(int k,string n,char g,int p){
 key=k;
 name=n;
 gender=g;
 phoneno=p;
+pos=0;pure1=0;pure2=0;comp=0;ds=0;applied1=0;applied2=0;phyc1=0;phyc2=0;ect1=0;wkshop1=0;wkshop2=0;
+ total=0;aggpoints=0;
 }
 };
 class Stack
@@ -251,6 +260,7 @@ while(temp!=NULL){
   cin>>temp->phyc1>>temp->phyc2>>temp->wkshop1>>temp->wkshop2>>temp->ect1;
   temp->total=((temp->pure1)+(temp->pure2)+(temp->comp)+(temp->ds)+temp->applied1+temp->applied2+temp->phyc1+temp->phyc2+temp->wkshop1+temp->wkshop2+temp->ect1);
     temp->aggpoints=(temp->total/11);
+    setpos(temp);
 
     cout<<temp->name<<"'s total marks is: "<<temp->total<<"and Agg.:"<<temp->aggpoints<<endl;
   temp=temp->next;
@@ -259,17 +269,43 @@ while(temp!=NULL){
 cout<<"the updated assesment list is \n";
 assesDisplay();
  }
+ void setpos(Node* n){
+  Node* temp=top;
+  int p;
+  if(n==top){
+    n->pos=1;
+    return;
+  }
+  
+    while(temp!=n){
+      if(temp->aggpoints < n->aggpoints){
+      n->pos=temp->pos;
+     // temp=top;
+         while(temp!=n){
+         (temp->pos)++;
+         temp=temp->next;
+        }
+      }else if(temp->aggpoints>n->aggpoints){
+             if(n->pos<temp->pos){ 
+              n->pos=(temp->pos)+1;}
+      }
+      if(temp!=n){
+      temp=temp->next;}
+      
+    }
+  
+ }
  void assesDisplay(){
   cout<<fixed<<setw(50)<<left<<course<<endl;
   Node* temp=top;
-  cout<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
+  cout<<fixed<<setw(3)<<"Pos"<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
   cout<<fixed<<setw(8)<<left<<"Gender"<<fixed<<setw(15)<<left<<"Contact";
   cout<<fixed<<setw(8)<<left<<"Pure1"<<fixed<<setw(8)<<left<<"Pure2"<<fixed<<setw(8)<<left<<"COMP"<<fixed<<setw(8)<<left<<"DS&ALG";
-  cout<<fixed<<setw(9)<<left<<"Applied1"<<fixed<<setw(9)<<left<<"Applied2"<<fixed<<setw(8)<<left<<"Phyc1"<<fixed<<setw(8)<<left<<"Phyc2";
-  cout<<fixed<<setw(9)<<left<<"Workshop1"<<fixed<<setw(9)<<left<<"Workshop2"<<fixed<<left<<setw(8)<<"ECT";
+  cout<<fixed<<setw(9)<<left<<"Applied1"<<fixed<<setw(9)<<left<<"Applied2"<<fixed<<setw(8)<<left<<"Phyc1"<<fixed<<setw(8)<<left<<"Phyc2"
+  <<fixed<<setw(9)<<left<<"Workshop1"<<fixed<<setw(9)<<left<<"Workshop2"<<fixed<<left<<setw(8)<<"ECT";
   cout<<fixed<<setw(8)<<left<<"Total"<<fixed<<setw(8)<<left<<"Agg"<<endl;
   while(temp!=NULL){
-     cout<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
+     cout<<fixed<<setw(3)<<temp->pos<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
   cout<<fixed<<setw(8)<<left<<temp->gender<<fixed<<setw(15)<<left<<temp->phoneno;
   //edit this
   cout<<fixed<<setw(8)<<left<<temp->pure1<<fixed<<setw(8)<<left<<temp->pure2<<fixed<<setw(8)<<left<<temp->comp<<fixed<<setw(8)<<left<<temp->ds;
@@ -323,9 +359,9 @@ switch(option){
           cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');                                                                                                                                  
         getline(cin,name);
-        //Gender handler
-       /*because the cin.ignore() function clears the input buffer up to the newline character ('\n'), 
+        /*because the cin.ignore() function clears the input buffer up to the newline character ('\n'), 
        any additional characters entered after "dfg" (e.g., pressing Enter) will also be ignored.*/
+        //Gender handler
         do{
         cout<<"gender i.e M/F \n" ;
         string input;
@@ -339,6 +375,7 @@ switch(option){
         if(islower(gender)){
             gender=toupper(gender);
         }
+        //phone number
        cout<<"Enter phone no.ie 07xxxxxxx \n if it is foreign ignore  the '+' \n  ";
        while(!(cin>>phone)||((to_string(phone).size())<9))//an unpredictable issue occurs here
        {
@@ -355,21 +392,51 @@ switch(option){
        s1.display2();
        break;
     case 3:
+        if(s1.isEmpty()){
+          cout<<"There are no students in the list"<<endl;
+          break;
+        }
         //delete new_node;
-        cout<<"Enter the Reg no. of the student to remve from list"<<endl;
-        cin>>key;
+        cout<<"Enter the Reg no. of the student to remove from list"<<endl;
+        while(!(cin>>key)){
+          cin.clear();
+          cin.ignore(numeric_limits<streamsize>::max(),'\n');
+          cout<<"Please input a valid reg no."<<endl;
+        }
         new_node=s1.pop(key);
         cout<<"student with details: \n"<<new_node->key<<"  "<<new_node->name<<"\n removed successfully\n";
         delete new_node;
         cout<<endl;
         break;   
-     case 4:s1.display2();
+     case 4:
+     if(s1.isEmpty()){
+      cout<<"Cant print an empty list \n Add Members 1st"<<endl;
+     }
+       else s1.display2();
         break;
       case 5:
       if(s1.isEmpty()){
         cout<<"please add students to the list 1st"<<endl;
       } else{
+        int n=10;
+        do{cout<<"PRESS 0 to Update PRESS 1 to display"<<endl;
+        cin>>n;
+        while((!cin>>n))
+        {//this loop condition is funny 
+          cin.clear();
+          cin.ignore(numeric_limits<streamsize>::max(),'\n');
+          cout<<"select a valid option "<<endl;
+          cin>>n;
+        }
+        if(n==0){
            s1.assesment();}
+         else  if(n==1){
+           s1.assesDisplay();}
+           else{
+            cout<<"Enter a valid option"<<endl;
+            
+           }}while(n!=0&&n!=1);
+          }
         break;  
     default:
           cout<<"please enter a valid option"<<endl;     
@@ -380,7 +447,7 @@ switch(option){
 void createlist(){
 /*cout<<"what is the name of your list"<<endl;
 cin>>stackname;
-stack s1;
+stack* s1;
 s1.course=stackname;*/
 cout<<"service still not available"<<endl;
 }
