@@ -68,30 +68,20 @@ public:
   }
 
 }
- bool checkIfNodeExist(Node* n)
-{
- Node* temp = top;
- int T,B,mid;
- T=top->key;
- B=bottom->key;
- bool exist = false;
- while(T<= B)
-{
-  mid=T + (B-T)/2;
-  if(T==n->key){
-    exist= true;
-    break;
-  }
-  if(mid<n->key){
-    T=mid + 1;
-  }
-  if(mid> n->key){
-      B=mid-1;
-  }
-
+ bool checkIfNodeExist(Node* n) {
+    Node* temp = top;
+    bool exist = false;
+    while (temp != NULL) {
+        if (temp->key == n->key) {
+            exist = true;
+            nodeexist=temp;
+            break;
+        }
+        temp = temp->next;
+    }
+    return exist;
 }
- return exist;
- }
+
  
  
  void sortpush(Node * n){

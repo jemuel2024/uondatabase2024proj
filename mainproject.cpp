@@ -61,6 +61,7 @@ public:
 {
  top= NULL;
  bottom= NULL;
+ nodeexist=NULL;
  course="ELECRICAL AND ELECRONIC ENGINEERING 2023";
 }
  bool isEmpty()
@@ -75,37 +76,98 @@ public:
   }
 
 }
- bool checkIfNodeExist(Node* n)
-{
- Node* temp = top;
- int T,B,mid;
- T=top->key;
- B=bottom->key;
- bool exist = false;
- while(T<= B)
-{
-  mid=T + (B-T)/2;
-  if(T==n->key){
-    exist= true;
-    break;
-  }
-  if(mid<n->key){
-    T=mid + 1;
-  }
-  if(mid> n->key){
-      B=mid-1;
-  }
+Node* getNodeAtIndex(int index) {
+    Node* current = top;
+    int count = 0;
 
+    while (current != NULL) {
+        if (count == index) {
+            return current;
+        }
+        count++;
+        current = current->next;
+    }
+
+    // Index out of bounds, return NULL or throw an exception
+    return NULL;
 }
- return exist;
- }
- 
- 
+bool checkIfNodeExist(Node* n) {
+    Node* T = top;
+    Node* B = bottom;
+
+    if (T == NULL && B == NULL) {
+        return false; // List is empty
+    }
+
+    int len = count();
+    int left = 0;
+    int right = len - 1;
+
+    while (left <= right) {
+        int midIndex = left + (right - left) / 2;
+        Node* midNode = getNodeAtIndex(midIndex);
+
+        if (midNode->key == n->key) {
+            nodeexist = midNode;
+            return true;
+        } else if (midNode->key < n->key) {
+            left = midIndex + 1;
+        } else {
+            right = midIndex - 1;
+        }
+    }
+
+    return false;
+}
+
+bool checkIfNodeExist(Node* n,int x) {//to be removed
+  Node* T=top;
+   Node* B=bottom;
+    if (T == NULL ) {
+        return false; // List is empty
+    }
+    if (T != NULL && T->key == n->key) {
+        nodeexist = T;
+        return true;
+    }
+    int C = count();
+
+    while (T != NULL && T != B) {
+        Node* mid = T;
+        for (int i = 0; i < C / 2; i++) {
+            mid = mid->next;
+        }
+        if (mid->key == n->key) {
+            nodeexist = mid;
+            return true;
+        }
+        if (mid->key > n->key) {
+          B=T;
+          for (int i = 0; i <( C / 2)-1; i++) {
+            B=B->next;
+        }
+        } else {
+            T = mid->next;
+        }
+        C /= 2;
+    }
+    return false;
+}
+
  void sortpush(Node * n){
   if((n-> key)< (top-> key)){
     n->next=top;
     top=n;
-  }else{
+    return;
+  }else if (n->key>bottom->key)
+  {
+    bottom->next=n;
+    bottom=n;
+    n->next=NULL;
+    return;
+  }
+  
+  else{
     Node* temp=top;
     Node* great=top;
     while(temp!=NULL){
@@ -133,6 +195,7 @@ public:
     }
   }
  }
+ return;
  }
  void push(Node * n) {
  if (top == NULL) {
@@ -149,7 +212,7 @@ public:
  cout << "Student details added  successfully" << endl;
  }
  }
- Node * pop() {
+ Node* pop() {
  Node * temp = NULL;
  if (isEmpty()) {
  cout << "stack underflow" << endl;
@@ -160,45 +223,44 @@ public:
  return temp;
  } 
  }
- Node * pop(int k) {
+ Node* pop(int k) {
  Node * temp = NULL;
  Node * tempreturn= NULL;
  Node* tempnode=new Node;
  tempnode->key=k;
  if (isEmpty()) {
- cout << "stack underflow" << endl;
- delete tempnode;
+ cout << "No students are in the list" << endl;
+ delete tempnode;//clean up allocated memory
  return temp;
- }/*else if(!checkIfNodeExist(tempnode)){
-  delete tempnode;
-  cout<<"No match found"<<endl;
-  return temp;
- }*/
+ }
   else if(checkIfNodeExist(tempnode)){
   temp= top;
   if(nodeexist==top){
-//tempreturn=top;
-
+tempreturn=top;
 top=top->next;
-return nodeexist;
-  }else{
-while(temp!=NULL){
-  if(temp->next==nodeexist){
-    temp->next=(temp->next)->next;
-    break;
-  }
-  temp=temp->next;
+if(top==NULL){
+  bottom=NULL;//update bottom if the last node is popped
 }
+delete tempnode;
+return tempreturn;
+  }else{
+    while(temp!=NULL){
+          if(temp->next==nodeexist){
+          temp->next=(temp->next)->next;
+          if(nodeexist==bottom){
+            bottom=temp;//update the bottom if the last node was popped
+          }
+          delete tempnode;
+         return nodeexist;
+        }
+  temp=temp->next;
+        }     
 }
 }
 else{
- // delete tempnode;
+
   cout<<"No match found"<<endl;
 }
- 
-// else{
-  //cout<<"Node doesn't exist"<<endl;
-//}
  delete tempnode;
  return nodeexist;
  }
@@ -298,14 +360,14 @@ assesDisplay();
  void assesDisplay(){
   cout<<fixed<<setw(50)<<left<<course<<endl;
   Node* temp=top;
-  cout<<fixed<<setw(3)<<"Pos"<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
+  cout<<fixed<<setw(4)<<left<<"Pos"<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
   cout<<fixed<<setw(8)<<left<<"Gender"<<fixed<<setw(15)<<left<<"Contact";
   cout<<fixed<<setw(8)<<left<<"Pure1"<<fixed<<setw(8)<<left<<"Pure2"<<fixed<<setw(8)<<left<<"COMP"<<fixed<<setw(8)<<left<<"DS&ALG";
   cout<<fixed<<setw(9)<<left<<"Applied1"<<fixed<<setw(9)<<left<<"Applied2"<<fixed<<setw(8)<<left<<"Phyc1"<<fixed<<setw(8)<<left<<"Phyc2"
   <<fixed<<setw(9)<<left<<"Workshop1"<<fixed<<setw(9)<<left<<"Workshop2"<<fixed<<left<<setw(8)<<"ECT";
   cout<<fixed<<setw(8)<<left<<"Total"<<fixed<<setw(8)<<left<<"Agg"<<endl;
   while(temp!=NULL){
-     cout<<fixed<<setw(3)<<temp->pos<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
+     cout<<fixed<<setw(4)<<left<<temp->pos<<fixed<<setw(8)<<left<<temp->key<<fixed<<setw(25)<<left<<temp->name;
   cout<<fixed<<setw(8)<<left<<temp->gender<<fixed<<setw(15)<<left<<temp->phoneno;
   //edit this
   cout<<fixed<<setw(8)<<left<<temp->pure1<<fixed<<setw(8)<<left<<temp->pure2<<fixed<<setw(8)<<left<<temp->comp<<fixed<<setw(8)<<left<<temp->ds;
@@ -319,14 +381,7 @@ assesDisplay();
 };
 #endif
 void createlist();
-/*class Assesstack:class Stack{
-    public:
-    int pure1,pure2,comp,ds,applied1,applied2,phyc1,phyc2,ect1,wkshop1,wkshop2;
-    double total,aggpoints;
-    AssesStack(){
-        Stack();
-    }
-};*/
+
 int main(){
     Stack s1;
  int option,key,phone;string name;char gender;
@@ -342,7 +397,8 @@ while(!(cin>>option)){
 
 Node* new_node=new Node;
 switch(option){
-    case 0: break;
+    case 0: delete new_node;
+           break;
     case 1:createlist();
            break;
     case 2:
@@ -377,7 +433,7 @@ switch(option){
         }
         //phone number
        cout<<"Enter phone no.ie 07xxxxxxx \n if it is foreign ignore  the '+' \n  ";
-       while(!(cin>>phone)||((to_string(phone).size())<9))//an unpredictable issue occurs here
+       while(!(cin>>phone)||(((to_string(phone)).size())<9))//an unpredictable issue occurs here
        {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -404,7 +460,7 @@ switch(option){
           cout<<"Please input a valid reg no."<<endl;
         }
         new_node=s1.pop(key);
-        cout<<"student with details: \n"<<new_node->key<<"  "<<new_node->name<<"\n removed successfully\n";
+       cout<<"student with details: \n"<<new_node->key<<"  "<<new_node->name<<"\n removed successfully\n";
         delete new_node;
         cout<<endl;
         break;   
@@ -437,9 +493,11 @@ switch(option){
             
            }}while(n!=0&&n!=1);
           }
+          delete new_node;
         break;  
     default:
-          cout<<"please enter a valid option"<<endl;     
+          cout<<"please enter a valid option"<<endl;
+          delete new_node;     
 
 } 
 }while(option!=0);
