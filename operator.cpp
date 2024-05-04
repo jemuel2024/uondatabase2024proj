@@ -6,6 +6,7 @@
 #include <cctype>
 #include <limits>
 #include <iomanip>
+#include <fstream>
 using namespace std;
 string stackname;
 #ifndef STACK_H
@@ -129,7 +130,7 @@ public:
     }
     return exist;
   }
-  
+
   void push(Node *n)
   {
     if (top == NULL)
@@ -314,17 +315,19 @@ public:
         flag = 1;
       } while (temp->grade != 'y');
       cout << temp->name << "'s total marks is: " << temp->total << "and Agg.:" << temp->aggpoints << endl;
-      cout<<"Press 0 to reenter press any no to continue"<<endl;
+      cout << "Press 0 to reenter press any no to continue" << endl;
       int x;
-      cin>>x;
-      if(x!=0){
-      temp = temp->next;}
+      cin >> x;
+      if (x != 0)
+      {
+        temp = temp->next;
+      }
       cout << endl;
     }
     cout << "the updated assesment list is \n";
     assesmentDisplay();
   }
-  void setpos(Node *n)
+  void setpos(Node *n) // double chec this
   {
     Node *temp = top;
     int p;
@@ -365,7 +368,7 @@ public:
       }
     }
   }
-    void setgrade(Node *n)
+  void setgrade(Node *n)
   {
     if (n->aggpoints >= 70 && n->aggpoints <= 100)
       n->grade = 'A';
@@ -394,7 +397,6 @@ public:
     {
       cout << fixed << setw(4) << left << temp->pos << fixed << setw(8) << left << temp->key << fixed << setw(25) << left << temp->name;
       cout << fixed << setw(8) << left << temp->gender << fixed << setw(15) << left << temp->phoneno;
-      // edit this
       cout << fixed << setw(8) << left << temp->pure1 << fixed << setw(8) << left << temp->pure2 << fixed << setw(8) << left << temp->comp << fixed << setw(8) << left << temp->ds;
       cout << fixed << setw(9) << left << temp->applied1 << fixed << setw(9) << left << temp->applied2 << fixed << setw(8) << left << temp->phyc1 << fixed << setw(8) << left << temp->phyc2;
       cout << fixed << setw(9) << left << temp->wkshop1 << fixed << setw(9) << left << temp->wkshop2 << fixed << left << setw(8) << temp->ect1;
@@ -434,7 +436,6 @@ public:
       }
     }
   }
-
 };
 #endif
 
@@ -444,6 +445,35 @@ int main()
   int option, key, phone;
   string name;
   char gender;
+
+  // file handler
+  ifstream datafile("electrical.data");
+  Node *new_node;
+  string s;
+  if (datafile.is_open())
+  {
+    while (!datafile.eof())
+    { new_node=new Node;
+      getline(datafile, s);
+      if (s.size() >= 45)
+      {
+        new_node->key = stoi(s.substr(0, 7));
+        new_node->name = s.substr(8, 33);
+        new_node->gender = s[34];
+        new_node->phoneno =stoi( s.substr(35, 44));
+        s1.push(new_node);
+        
+      }
+    }
+  }
+  else
+  {
+    cerr << "Unable to open and update from datafile" << endl;
+  }
+  datafile.close();
+
+
+
   do
   {
     cout << "\nselect the operation you want to perform" << endl;
@@ -455,7 +485,6 @@ int main()
       cin.clear();
       cin.ignore(numeric_limits<streamsize>::max(), '\n');
       cout << "please input a no. corresponding to your selection \n";
-      // cin>>option;
     }
 
     Node *new_node = new Node;
@@ -570,7 +599,7 @@ int main()
           else if (n == 1)
           {
             cout << "press 0 for DISPLAY SORTED BY REG NO" << endl;
-            cout << "PRESS Any other no for osition sorting" << endl;
+            cout << "PRESS Any other no for position sorting" << endl;
             cin >> n;
             if (n == 0)
               s1.assesmentDisplay();
