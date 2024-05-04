@@ -314,7 +314,11 @@ public:
         flag = 1;
       } while (temp->grade != 'y');
       cout << temp->name << "'s total marks is: " << temp->total << "and Agg.:" << temp->aggpoints << endl;
-      temp = temp->next;
+      cout<<"Press 0 to reenter press any no to continue"<<endl;
+      int x;
+      cin>>x;
+      if(x!=0){
+      temp = temp->next;}
       cout << endl;
     }
     cout << "the updated assesment list is \n";
