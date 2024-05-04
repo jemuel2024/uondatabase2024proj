@@ -1,6 +1,7 @@
 //REEDITTED it inanother file and returned here due to unforeseen errors
 //case 5 has been implemented to handle any kind of error
 //All the cases have been implemented
+//used binarysearch implementation though itsnot efficient
 # include <iostream>
 # include <string>
 # include <cctype>
@@ -75,7 +76,7 @@ public:
   return false;
   }
 
-}
+}/*
 Node* getNodeAtIndex(int index) {
     Node* current = top;
     int count = 0;
@@ -90,37 +91,63 @@ Node* getNodeAtIndex(int index) {
 
     // Index out of bounds, return NULL or throw an exception
     return NULL;
-}
-bool checkIfNodeExist(Node* n) {
-    Node* T = top;
-    Node* B = bottom;
+}*/
+Node* middle(Node* start, Node* last) {
+    if (start == nullptr)
+        return nullptr;
 
-    if (T == NULL && B == NULL) {
-        return false; // List is empty
-    }
+    Node* slow = top;
+    Node* fast = top->next;
 
-    int len = count();
-    int left = 0;
-    int right = len - 1;
-
-    while (left <= right) {
-        int midIndex = left + (right - left) / 2;
-        Node* midNode = getNodeAtIndex(midIndex);
-
-        if (midNode->key == n->key) {
-            nodeexist = midNode;
-            return true;
-        } else if (midNode->key < n->key) {
-            left = midIndex + 1;
-        } else {
-            right = midIndex - 1;
+    while (fast != last) {
+        fast = fast->next;
+        if (fast != last) {
+            slow = slow->next;
+            fast = fast->next;
         }
     }
+    return slow;
+}
 
+// Function for implementing binary search on linked list
+Node* binarySearch( int value) {
+    Node* start = top;
+    Node* last = nullptr;
+
+    do {
+        // Find middle
+        Node* mid = middle(start, last);
+
+        // If middle is empty
+        if (mid == nullptr)
+            return nullptr;
+
+        // If value is present at middle
+        if (mid->key == value)
+            return mid;
+
+        // If value is more than mid
+        else if (mid->key < value)
+            start = mid->next;
+
+        // If value is less than mid
+        else
+            last = mid;
+    } while (last == nullptr || last != start);
+
+    // Value not present
+    return nullptr;
+}
+
+bool checkIfNodeExist(Node* n) {
+   nodeexist= binarySearch(n->key);
+   if(nodeexist!=nullptr){
+    return true;
+   }  
     return false;
 }
 
-bool checkIfNodeExist(Node* n,int x) {//to be removed
+/*bool checkIfNodeExist(Node* n,int x) {//to be removed
   Node* T=top;
    Node* B=bottom;
     if (T == NULL ) {
@@ -152,7 +179,7 @@ bool checkIfNodeExist(Node* n,int x) {//to be removed
         C /= 2;
     }
     return false;
-}
+}*/
 
  void sortpush(Node * n){
   if((n-> key)< (top-> key)){
@@ -282,7 +309,7 @@ else{
  }
  return count;
  }
- void display() {
+ void RegSortedDisplay() {
 
  cout << "All values in the Stack are :" << endl;
  Node * temp = top;
@@ -293,7 +320,7 @@ else{
 
  cout << endl;
  }
- void display2(){
+ void RegSortedDisplay(){
   /*cout<<fixed<<setw(60)<<left<<setfill('_')<<endl;
   cout<<endl;
   cout<<endl<<"|"*/cout<<fixed<<setw(50)<<left<<course<<endl;
@@ -312,7 +339,7 @@ else{
  void assesment(){
 Node* temp=top;
 while(temp!=NULL){
-  display2();
+  RegSortedDisplay();
   cout<<"You are currently inputing assesment marks for:"<<temp->key<<" "<<temp->name<<endl;
   cout<<endl;
   cout<<"INSERT THE RESULTS IN THE GIVEN ORDER"<<endl;
@@ -329,7 +356,7 @@ while(temp!=NULL){
   cout<<endl;
 }
 cout<<"the updated assesment list is \n";
-assesDisplay();
+assesmentDisplay();
  }
  void setpos(Node* n){
   Node* temp=top;
@@ -357,7 +384,7 @@ assesDisplay();
     }
   
  }
- void assesDisplay(){
+ void assesmentDisplay(){
   cout<<fixed<<setw(50)<<left<<course<<endl;
   Node* temp=top;
   cout<<fixed<<setw(4)<<left<<"Pos"<<fixed<<setw(8)<<left<<"Reg No."<<fixed<<setw(25)<<left<<"Name";
@@ -445,7 +472,7 @@ switch(option){
        new_node->phoneno=phone;
        s1.push(new_node);
        cout<<"this is the updated list\n"<<endl;
-       s1.display2();
+       s1.RegSortedDisplay();
        break;
     case 3:
         if(s1.isEmpty()){
@@ -468,7 +495,7 @@ switch(option){
      if(s1.isEmpty()){
       cout<<"Cant print an empty list \n Add Members 1st"<<endl;
      }
-       else s1.display2();
+       else s1.RegSortedDisplay();
         break;
       case 5:
       if(s1.isEmpty()){
@@ -487,7 +514,7 @@ switch(option){
         if(n==0){
            s1.assesment();}
          else  if(n==1){
-           s1.assesDisplay();}
+           s1.assesmentDisplay();}
            else{
             cout<<"Enter a valid option"<<endl;
             
