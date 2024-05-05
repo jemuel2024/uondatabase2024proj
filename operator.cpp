@@ -1,5 +1,4 @@
-// REEDITTED it inanother file and returned here due to unforeseen errors
-// case 5 has been implemented to handle any kind of error
+
 
 #include <iostream>
 #include <string>
@@ -13,11 +12,13 @@ string stackname;
 #define STACK_H
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 class Node
 {
 public:
   int key;
+  string reg;
   string name;
   char gender, grade;
   int phoneno;
@@ -96,12 +97,18 @@ public:
   Node *top;
   Node *bottom;
   string course;
+  string code;
+  string year;
+  string filename;
   Node *nodeexist;
   Stack()
   {
     top = NULL;
     bottom = NULL;
     course = "ELECRICAL AND ELECRONIC ENGINEERING 2023";
+    code = "FEE3";
+    year = "2023";
+    filename = "electrical";
   }
   bool isEmpty()
   {
@@ -269,21 +276,6 @@ public:
     return count;
   }
 
-  void RegSortedDisplay()
-  {
-    cout << fixed << setw(50) << left << course << endl;
-    Node *temp = top;
-    cout << fixed << setw(8) << left << "Reg No." << fixed << setw(25) << left << "Name";
-    cout << fixed << setw(8) << left << "Gender" << fixed << setw(15) << left << "Contact" << endl;
-
-    while (temp != NULL)
-    {
-      cout << fixed << setw(8) << left << temp->key << fixed << setw(25) << left << temp->name;
-      cout << fixed << setw(8) << left << temp->gender << fixed << setw(15) << left << temp->phoneno << endl;
-      temp = temp->next;
-    }
-  }
-
   void assesment()
   {
     Node *temp = top;
@@ -383,11 +375,26 @@ public:
       n->grade = 'X';
     }
   }
+  void RegSortedDisplay()
+  {
+    cout << fixed << setw(50) << left << course << endl;
+    Node *temp = top;
+    cout << fixed << setw(20) << left << "Reg No." << fixed << setw(25) << left << "Name";
+    cout << fixed << setw(8) << left << "Gender" << fixed << setw(15) << left << "Contact" << endl;
+
+    while (temp != NULL)
+    {
+      cout << fixed << setw(20) << left << (code + "/" + to_string(temp->key) + "/" + year) << fixed << setw(25) << left << temp->name;
+      cout << fixed << setw(8) << left << temp->gender << fixed << setw(15) << left << temp->phoneno << endl;
+      temp = temp->next;
+    }
+  }
+
   void assesmentDisplay()
   {
     cout << fixed << setw(50) << left << course << endl;
     Node *temp = top;
-    cout << fixed << setw(4) << left << "Pos" << fixed << setw(8) << left << "Reg No." << fixed << setw(25) << left << "Name";
+    cout << fixed << setw(4) << left << "Pos" << fixed << setw(20) << left << "Reg No." << fixed << setw(25) << left << "Name";
     cout << fixed << setw(8) << left << "Gender" << fixed << setw(15) << left << "Contact";
     cout << fixed << setw(8) << left << "Pure1" << fixed << setw(8) << left << "Pure2" << fixed << setw(8) << left << "COMP" << fixed << setw(8) << left << "DS&ALG";
     cout << fixed << setw(9) << left << "Applied1" << fixed << setw(9) << left << "Applied2" << fixed << setw(8) << left << "Phyc1" << fixed << setw(8) << left << "Phyc2"
@@ -395,7 +402,7 @@ public:
          << fixed << setw(8) << left << "Total" << fixed << setw(8) << left << "Agg" << endl;
     while (temp != NULL)
     {
-      cout << fixed << setw(4) << left << temp->pos << fixed << setw(8) << left << temp->key << fixed << setw(25) << left << temp->name;
+      cout << fixed << setw(4) << left << temp->pos << fixed << setw(20) << left << (code + "/" + to_string(temp->key) + "/" + year) << fixed << setw(25) << left << temp->name;
       cout << fixed << setw(8) << left << temp->gender << fixed << setw(15) << left << temp->phoneno;
       cout << fixed << setw(8) << left << temp->pure1 << fixed << setw(8) << left << temp->pure2 << fixed << setw(8) << left << temp->comp << fixed << setw(8) << left << temp->ds;
       cout << fixed << setw(9) << left << temp->applied1 << fixed << setw(9) << left << temp->applied2 << fixed << setw(8) << left << temp->phyc1 << fixed << setw(8) << left << temp->phyc2;
@@ -408,7 +415,7 @@ public:
   {
     Node *temp;
     cout << fixed << setw(50) << left << course << endl;
-    cout << fixed << setw(4) << left << "Pos" << fixed << setw(8) << left << "Reg No." << fixed << setw(25) << left << "Name";
+    cout << fixed << setw(4) << left << "Pos" << fixed << setw(20) << left << "Reg No." << fixed << setw(25) << left << "Name";
     cout << fixed << setw(8) << left << "Gender" << fixed << setw(15) << left << "Contact";
     cout << fixed << setw(8) << left << "Pure1" << fixed << setw(8) << left << "Pure2" << fixed << setw(8) << left << "COMP" << fixed << setw(8) << left << "DS&ALG";
     cout << fixed << setw(9) << left << "Applied1" << fixed << setw(9) << left << "Applied2" << fixed << setw(8) << left << "Phyc1" << fixed << setw(8) << left << "Phyc2"
@@ -421,7 +428,7 @@ public:
       {
         if (temp->pos == i)
         {
-          cout << fixed << setw(4) << left << temp->pos << fixed << setw(8) << left << temp->key << fixed << setw(25) << left << temp->name;
+          cout << fixed << setw(4) << left << temp->pos << fixed << setw(20) << left << (code + "/" + to_string(temp->key) + "/" + year) << fixed << setw(25) << left << temp->name;
           cout << fixed << setw(8) << left << temp->gender << fixed << setw(15) << left << temp->phoneno;
           // edit this
           cout << fixed << setw(8) << left << temp->pure1 << fixed << setw(8) << left << temp->pure2 << fixed << setw(8) << left << temp->comp << fixed << setw(8) << left << temp->ds;
@@ -435,6 +442,20 @@ public:
         temp = temp->next;
       }
     }
+  }
+  void setFileDetails(Node *temp)
+  {
+    string Dfile = filename + ".data";
+    ofstream datafile(Dfile, ios::app);
+    if (datafile.is_open())
+    {
+      datafile << setw(8) <<left<< temp->key << setw(25) <<left<< temp->name << setw(1) << temp->gender << setw(9) <<left<< temp->phoneno << "\n";
+    }
+    else
+    {
+      cerr << "!!THE NEWLY PUSHED DATA WAS NOT Updated Successfully" << endl;
+    }
+    datafile.close();
   }
 };
 #endif
@@ -453,16 +474,17 @@ int main()
   if (datafile.is_open())
   {
     while (!datafile.eof())
-    { new_node=new Node;
+    {
+      new_node = new Node;
       getline(datafile, s);
-      if (s.size() >= 45)
+     if (s.size() >= 43)
       {
         new_node->key = stoi(s.substr(0, 7));
-        new_node->name = s.substr(8, 33);
-        new_node->gender = s[34];
-        new_node->phoneno =stoi( s.substr(35, 44));
+        new_node->name = s.substr(8, 32);
+        char C= s.at(33);
+        new_node->gender=C;
+        new_node->phoneno = stoi(s.substr(34, 42));
         s1.push(new_node);
-        
       }
     }
   }
@@ -471,8 +493,6 @@ int main()
     cerr << "Unable to open and update from datafile" << endl;
   }
   datafile.close();
-
-
 
   do
   {
@@ -541,6 +561,7 @@ int main()
       new_node->gender = gender;
       new_node->phoneno = phone;
       s1.push(new_node);
+      s1.setFileDetails(new_node);
       cout << "this is the updated list\n"
            << endl;
       s1.RegSortedDisplay();
