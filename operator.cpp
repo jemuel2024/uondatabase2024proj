@@ -13,6 +13,7 @@ string stackname;
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 using namespace std;
 class Node
 {
@@ -125,6 +126,7 @@ public:
   {
     Node *temp = top;
     bool exist = false;
+    nodeexist = NULL;
     while (temp != NULL)
     {
       if (temp->key == n->key)
@@ -156,7 +158,7 @@ public:
       top = n;
       n -> next = temp;*/
       sortpush(n);
-      cout << "Student details added  successfully" << endl;
+      cout << "...Student details added  successfully..." << endl;
     }
   }
   void sortpush(Node *n)
@@ -205,25 +207,24 @@ public:
       }
     }
   }
-  Node *pop()
+  void pushtoFile(Node *temp)
   {
-    Node *temp = NULL;
-    if (isEmpty())
+    string Dfile = filename + ".data";
+    ofstream datafile(Dfile,ios::app);
+    if (datafile.is_open())
     {
-      cout << "stack underflow" << endl;
-      return temp;
+      datafile << setw(8) << left << temp->key << setw(25) << left << temp->name << setw(1) << temp->gender << setw(9) << left << temp->phoneno << "\n";
     }
     else
     {
-      temp = top;
-      top = top->next;
-      return temp;
+      cerr << "!!THE NEWLY PUSHED DATA WAS NOT Updated Successfully" << endl;
     }
+    datafile.close();
   }
+
   Node *pop(int k)
   {
     Node *temp = NULL;
-    Node *tempreturn = NULL;
     Node *tempnode = new Node;
     tempnode->key = k;
     if (isEmpty())
@@ -237,12 +238,10 @@ public:
       temp = top;
       if (nodeexist == top)
       {
-        // tempreturn=top;
-
         top = top->next;
         return nodeexist;
       }
-      else
+      else if (nodeexist != top)
       {
         while (temp != NULL)
         {
@@ -257,11 +256,45 @@ public:
     }
     else
     {
-      // delete tempnode;
       cout << "No match found" << endl;
     }
     delete tempnode;
     return nodeexist;
+  }
+  void popDataFile(Node *new_node)
+  {
+    if (new_node == NULL)
+    {
+      return;
+    }
+    string file = filename + ".data";
+    fstream popfile(file, ios::in | ios::out);
+    if (popfile.is_open())
+    {
+      vector<string> s;
+      string temp;
+      while (!popfile.eof())
+      {
+        getline(popfile, temp);
+        if (!temp.empty())
+        {
+          if (new_node->key == stoi(temp.substr(0, 7)))
+            continue;
+           s.push_back(temp);
+          }
+      }
+      popfile.clear();
+      popfile.seekp(0, ios::beg);
+      for (const auto &l : s)
+      {
+        popfile << l << "\n";
+      }
+    }
+    else
+    {
+      cerr << "!!Unable to pop from file" << endl;
+    }
+    popfile.close();
   }
 
   int count()
@@ -443,20 +476,6 @@ public:
       }
     }
   }
-  void setFileDetails(Node *temp)
-  {
-    string Dfile = filename + ".data";
-    ofstream datafile(Dfile, ios::app);
-    if (datafile.is_open())
-    {
-      datafile << setw(8) <<left<< temp->key << setw(25) <<left<< temp->name << setw(1) << temp->gender << setw(9) <<left<< temp->phoneno << "\n";
-    }
-    else
-    {
-      cerr << "!!THE NEWLY PUSHED DATA WAS NOT Updated Successfully" << endl;
-    }
-    datafile.close();
-  }
 };
 #endif
 
@@ -477,15 +496,16 @@ int main()
     {
       new_node = new Node;
       getline(datafile, s);
-     if (s.size() >= 43)
+      
+      if (s.size() >= 43)
       {
-        new_node->key = stoi(s.substr(0, 7));
-        new_node->name = s.substr(8, 32);
-        char C= s.at(33);
-        new_node->gender=C;
-        new_node->phoneno = stoi(s.substr(34, 42));
+        new_node->key = stoi(s.substr(0, 8));
+        new_node->name = s.substr(8, 25);
+        new_node->gender = s.at(33);
+        new_node->phoneno = stoi(s.substr(34, 9));
         s1.push(new_node);
       }
+    
     }
   }
   else
@@ -561,10 +581,10 @@ int main()
       new_node->gender = gender;
       new_node->phoneno = phone;
       s1.push(new_node);
-      s1.setFileDetails(new_node);
-      cout << "this is the updated list\n"
-           << endl;
-      s1.RegSortedDisplay();
+      s1.pushtoFile(new_node);
+      cout << "this is the updated Details\n"
+           << new_node->key << " " << new_node->name << " " << new_node->gender << " "
+           << new_node->phoneno << endl;
       break;
     case 2:
       if (s1.isEmpty())
@@ -581,8 +601,12 @@ int main()
         cout << "Please input a valid reg no." << endl;
       }
       new_node = s1.pop(key);
-      cout << "student with details: \n"
-           << new_node->key << "  " << new_node->name << "\n removed successfully\n";
+      if (new_node != NULL)
+      {
+        cout << "student with details: \n"
+             << new_node->key << "  " << new_node->name << "\n removed successfully\n";
+        s1.popDataFile(new_node);
+      }
       delete new_node;
       cout << endl;
       break;
@@ -638,4 +662,7 @@ int main()
       cout << "please enter a valid option" << endl;
     }
   } while (option != 0);
+}
+void UpdateBexit()
+{
 }
