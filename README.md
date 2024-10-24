@@ -4,7 +4,7 @@ The database allows for the following operations:
 - Removing students: The secretary can delete existing student records.
 - Sorting students: The database can be sorted alphabetically by the student's name.
   
-KEY FEATURES:
+** KEY FEATURES: **
 - Linked List Implementation: The project utilizes a linked list data structure to efficiently store and manage student information.
 - User-Friendly Interface: A simple and intuitive interface allows for easy data entry and manipulation.
 -Robust Data Management: Ensures data integrity and prevents accidental deletion or modification.
